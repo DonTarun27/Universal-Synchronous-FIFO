@@ -23,18 +23,14 @@ module univ_fifo_sync
 
     always@(posedge clk or negedge rst_n)
     begin
-        if(!rst_n)
-            write_pointer <= 0;
-        else if(cs && wr_en && !full)
-            write_pointer <= write_pointer + 1'b1;
+        if(!rst_n) write_pointer <= 0;
+        else write_pointer <= write_pointer + (cs && wr_en && !full);
     end
 
     always@(posedge clk or negedge rst_n)
     begin
-        if(!rst_n)
-            read_pointer <= 0;
-        else if(cs && rd_en && !empty)
-            read_pointer <= read_pointer + 1'b1;
+        if(!rst_n) read_pointer <= 0;
+        else read_pointer <= read_pointer + (cs && rd_en && !empty);
     end
 
     // Declare the empty/full logic
@@ -51,7 +47,7 @@ module univ_fifo_sync
     begin
         if(!rst_n)
             data_out <= 0;
-        else if (cs && rd_en && !empty)
+        else if(cs && rd_en && !empty)
             data_out <= fifo[read_pointer[FIFO_DEPTH_LOG-1:0]];
     end
 endmodule
