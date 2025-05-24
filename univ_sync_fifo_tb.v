@@ -4,7 +4,7 @@ module univ_sync_fifo_tb;
     localparam FIFO_DEPTH = 8;
     localparam DATA_WIDTH = 32;
 
-    reg clk = 0;
+    reg clk;
     reg rst_n;
     reg cs;
     reg wr_en;
@@ -59,6 +59,7 @@ module univ_sync_fifo_tb;
     // Create stimulus
     initial
     begin
+	clk = 1'b0;
 	#10 rst_n = 0; rd_en = 0; wr_en = 0;
 	#5 rst_n = 1;
 	$display($time, "\n SCENARIO 1");
