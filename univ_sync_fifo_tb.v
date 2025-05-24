@@ -61,7 +61,7 @@ module univ_sync_fifo_tb;
         write_data(1);
         write_data(10);
         write_data(100);
-        repeat(4) read_data();
+        repeat(3) read_data();
 
         $display($time, "\n SCENARIO 2");
         for(i=0; i<FIFO_DEPTH; i=i+1)
