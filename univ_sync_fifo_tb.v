@@ -29,22 +29,19 @@ module univ_sync_fifo_tb;
     task write_data(input [DATA_WIDTH-1:0] d_in);
     begin
         @(posedge clk); // sync to positive edge of clock
-        cs = 1; wr_en = 1;
+        wr_en = 1;
         data_in = d_in;
         $display($time, " write_data data_in = %0d", data_in);
-        @(posedge clk);
-        cs = 1; wr_en = 0;
+        #5 wr_en = 0;
     end
     endtask
 
     task read_data();
     begin
         @(posedge clk);  // sync to positive edge of clock
-        cs = 1; rd_en = 1;
-        @(posedge clk);
-        #1;
+        rd_en = 1;
         $display($time, " read_data data_out = %0d", data_out);
-        cs = 1; rd_en = 0;
+        #5 rd_en = 0;
     end
     endtask
 
@@ -55,8 +52,8 @@ module univ_sync_fifo_tb;
     initial
     begin
         clk = 1'b0;
-        #10 rst_n = 0; rd_en = 0; wr_en = 0;
-        #5 rst_n = 1;
+        #10 {rst_n, wr_en, rd_en} = 0;
+        #5 {rst_n, cs} = 2'b11;
         $display($time, "\n SCENARIO 1");
         write_data(1);
         write_data(10);
@@ -76,6 +73,6 @@ module univ_sync_fifo_tb;
         for(i=0; i<FIFO_DEPTH; i=i+1)
             read_data();
 
-        #400 $stop;
+        #20 $stop;
     end
 endmodule
